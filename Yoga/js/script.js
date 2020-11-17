@@ -69,7 +69,7 @@ $(function () {
 $('a[href^="#scroll"]').bind('click.smoothscroll',function (e) {
  e.preventDefault();
 
-var target = this.hash,
+let target = this.hash,
  $target = $(target);
 
 $('html, body').stop().animate({
@@ -79,18 +79,30 @@ $('html, body').stop().animate({
  });
  });
 
-let today = new Date();
-let hourNow = today.getHours();
-let greeting;
+(function() {
+  'use strict';
 
-if (hourNow > 18) {
-	greeting = 'Добрый вечер!';
-} else if (hourNow > 12) {
-	greeting = 'Добрый день!';
-} else if (hourNow > 0) {
-	greeting = 'Доброе утро!';
-} else {
-	greeting = 'Приветствуем!';
-}
+  function trackScroll() {
+    let scrolled = window.pageYOffset;
+    let coords = document.documentElement.clientHeight;
 
-document.write('<h3>' + greeting + '</h3');
+    if (scrolled > coords) {
+      goTopBtn.classList.add('BackToTopDisplay');
+    }
+    if (scrolled < coords) {
+      goTopBtn.classList.remove('BackToTopDisplay');
+    }
+  }
+
+  function backToTop() {
+    if (window.pageYOffset > 0) {
+      window.scrollBy(0, -80);
+      setTimeout(backToTop, 15);
+    }
+  }
+
+  let goTopBtn = document.querySelector('.BackToTop');
+
+  window.addEventListener('scroll', trackScroll);
+  goTopBtn.addEventListener('click', backToTop);
+})();
